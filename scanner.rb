@@ -1,10 +1,11 @@
-# This is a top-level class that does the following: Sets the price of an item, scan an item, and return total
-
 =begin
 
   Todo:
-  1. Add in bulk pricing
-  2. Confirm bulk pricing is working
+  1. Create a separate class for grocery items
+  2. Terminal class creates grocery items, including bulk deals
+  3. Create method that allows a string of items to be scanned all at once rather than individually
+  4. Create order class? So the terminal can have some sort of history?
+  5. Sinatra app & Rack/Rspec tests... 
 
 =end
 
@@ -13,9 +14,7 @@ class Terminal
   def initialize
     @subtotal = 0
     @pricing = {}
-    @volumeDeals = {}
     @scannedItems = {}
-    # Volume discounts?
     puts "Register is up and running."
   end
 
@@ -53,9 +52,16 @@ class Terminal
   end
 
   def applyDiscounts(subtotal)
-    aItemDiscount = (@scannedItems["A"] / 4)*1
-    cItemDiscount = (@scannedItems["C"] / 6)*1.5
-    finalCost = subtotal - aItemDiscount - cItemDiscount
+    finalCost = subtotal
+    if @scannedItems.has_key?("A")
+      aItemDiscount = (@scannedItems["A"] / 4)*1
+      finalCost = finalCost - aItemDiscount
+    end
+    if @scannedItems.has_key?("C")
+      cItemDiscount = (@scannedItems["C"] / 6)*1.5
+      finalCost = finalCost - cItemDiscount
+    end
+    finalCost
   end
 
 end
@@ -78,19 +84,17 @@ order.see_pricing
 #order.scan("A")
 #order.scan("A")
 
-
-# Pickup with working on getting applyDiscounts to work when A isn't present. 
-order.scan("C")
-order.scan("C")
-order.scan("C")
-order.scan("C")
-order.scan("C")
-order.scan("C")
-order.scan("C")
-
-#order.scan("A")
-#order.scan("B")
 #order.scan("C")
-#order.scan("D")
+#order.scan("C")
+#order.scan("C")
+#order.scan("C")
+#order.scan("C")
+#order.scan("C")
+#order.scan("C")
+
+order.scan("A")
+order.scan("B")
+order.scan("C")
+order.scan("D")
 
 puts order.total
